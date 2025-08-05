@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NONFICTION - A/B Test Version A</title>
+    <link rel="stylesheet" href="src/style.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="logo-container">
+        <div class="logo-rotating"></div>
+      </div>
+      <div class="glitch-effect"></div>
+    </div>
+
+    <div id="dynamic-bg"></div>
+    <header>
+      <h1 class="logo">NONFICTION</h1>
+      <nav class="main-nav"></nav>
+      <div class="menu-bar">
+        <button id="menu-toggle" aria-label="메뉴 열기">
+          <span class="menu-icon"></span>
+        </button>
+        <div id="dropdown-menu" class="dropdown-menu">
+          <a href="#">Best Seller</a>
+          <a href="#">Perfume</a>
+          <a href="#">Hand&Lip</a>
+          <a href="#">Body</a>
+          <a href="#">Hair</a>
+          <a href="#">Home Fragrance</a>
+          <a href="#">Gift Set</a>
+          <a href="#">Benefit</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="ai-recommender" class="visible">
+        <div class="bottle-visual">
+          <svg
+            id="perfume-svg"
+            width="120"
+            height="180"
+            viewBox="0 0 120 180"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <clipPath id="bottle-clip">
+                <!-- 각진 원통형(루마리 휴지) 모양 -->
+                <rect x="25" y="50" width="70" height="110" rx="28" />
+              </clipPath>
+            </defs>
+            <!-- 채워지는 부분 -->
+            <rect
+              id="bottle-fill-rect"
+              x="25"
+              y="160"
+              width="70"
+              height="0"
+              fill="#e4c662"
+              clip-path="url(#bottle-clip)"
+            />
+            <!-- 병 외곽선(각진 원통형) -->
+            <rect
+              x="25"
+              y="50"
+              width="70"
+              height="110"
+              rx="28"
+              fill="none"
+              stroke="#bfae9e"
+              stroke-width="3"
+            />
+            <!-- 병 목 부분 -->
+            <rect x="50" y="30" width="20" height="20" rx="6" fill="#bfae9e" />
+            <rect x="45" y="20" width="30" height="12" rx="6" fill="#e6b98a" />
+          </svg>
+          <div class="bottle-drop" id="bottle-drop"></div>
+        </div>
+        <div id="quiz-container">
+          <!-- 질문/선택지는 main.js에서 동적으로 렌더링됩니다. -->
+        </div>
+        <div id="result-container" class="hidden">
+          <h4>당신을 위한 추천</h4>
+          <div id="result-visual"></div>
+          <p id="result-scent"></p>
+          <p id="result-description"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 NONFICTION. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>
