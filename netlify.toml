@@ -1,0 +1,17 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/sidea/*"
+  to = "/sidea/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/sideb/*"
+  to = "/sideb/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

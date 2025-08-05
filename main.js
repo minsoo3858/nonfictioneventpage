@@ -97,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   if (aiRecommender) observer.observe(aiRecommender);
-  productItems.forEach((item) => observer.observe(item));
+  if (productItems && productItems.length > 0) {
+    productItems.forEach((item) => observer.observe(item));
+  }
 
   // --- AI Recommender Logic ---
   if (startBtn) {
@@ -140,37 +142,48 @@ const scentData = {
   },
 };
 
-options.forEach((option) => {
-  function handleOptionSelect() {
-    const selectedValue = option.dataset.value;
-    const result = scentData[selectedValue];
-    if (result) {
-      resultScent.textContent = result.name;
-      resultDescription.textContent = result.description;
-      resultContainer.classList.add("visible");
-      resultContainer.classList.remove("hidden");
-      setTimeout(() => {
-        resultContainer.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 200);
+// 퀴즈 옵션 이벤트 처리 (요소가 존재할 때만)
+if (options && options.length > 0) {
+  options.forEach((option) => {
+    function handleOptionSelect() {
+      const selectedValue = option.dataset.value;
+      const result = scentData[selectedValue];
+      if (result) {
+        resultScent.textContent = result.name;
+        resultDescription.textContent = result.description;
+        resultContainer.classList.add("visible");
+        resultContainer.classList.remove("hidden");
+        setTimeout(() => {
+          resultContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 200);
+      }
     }
-  }
 
-  // 클릭 이벤트
-  option.addEventListener("click", handleOptionSelect);
+    // 클릭 이벤트
+    option.addEventListener("click", handleOptionSelect);
 
-  // 터치 이벤트 (모바일 최적화)
-  option.addEventListener("touchend", (e) => {
-    e.preventDefault(); // 더블 탭 줌 방지
-    handleOptionSelect();
+    // 터치 이벤트 (모바일 최적화)
+    option.addEventListener("touchend", (e) => {
+      e.preventDefault(); // 더블 탭 줌 방지
+      handleOptionSelect();
+    });
   });
-});
+}
 
-// 제품 hover 효과
-productItems.forEach((item) => {
-  const productName = item.querySelector("p").textContent;
-  const infoDiv = document.createElement("div");
-  infoDiv.classList.add("product-info");
-  infoDiv.innerHTML = `<p>${productName}</p>`;
-  item.appendChild(infoDiv);
-  item.querySelector("p").style.display = "none";
-});
+// 제품 hover 효과 (요소가 존재할 때만)
+if (productItems && productItems.length > 0) {
+  productItems.forEach((item) => {
+    const productNameElement = item.querySelector("p");
+    if (productNameElement) {
+      const productName = productNameElement.textContent;
+      const infoDiv = document.createElement("div");
+      infoDiv.classList.add("product-info");
+      infoDiv.innerHTML = `<p>${productName}</p>`;
+      item.appendChild(infoDiv);
+      productNameElement.style.display = "none";
+    }
+  });
+}
