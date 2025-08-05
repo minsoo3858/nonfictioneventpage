@@ -741,7 +741,7 @@ function addResultButtons(container) {
   wordsBtn.style.touchAction = "manipulation";
   // 모두의 단어 보기 버튼 클릭 시 sideb로 이동
   wordsBtn.addEventListener("click", () => {
-    window.location.href = "../sideb/index.html";
+    window.location.href = "/sideb/index.html";
   });
   btnWrap.appendChild(wordsBtn);
 

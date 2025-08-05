@@ -1,5 +1,6 @@
 // Import required CSS and libraries
-import "./style.css";
+// CSS는 HTML에서 직접 로드하므로 여기서는 주석 처리
+// import "./style.css";
 
 // 모든 Matter.js 기능을 전역 객체로 가져오기
 import * as Matter from "matter-js";
@@ -1082,7 +1083,7 @@ function createTestButton() {
   }
 
   testButton.addEventListener("click", () => {
-    window.location.href = "../sidea/index.html";
+    window.location.href = "/sidea/index.html";
   });
 }
 
