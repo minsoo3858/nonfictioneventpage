@@ -1083,7 +1083,7 @@ function createTestButton() {
   }
 
   testButton.addEventListener("click", () => {
-    window.location.href = "/sidea/index.html";
+    window.location.href = "../sidea/";
   });
 }
 

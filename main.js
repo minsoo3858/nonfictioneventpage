@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (startBtn) {
     startBtn.addEventListener("click", () => {
       // 로그인 검사 없이 바로 페이지 이동
-      window.location.href = "/sidea/index.html";
+      window.location.href = "./sidea/";
     });
   }
 
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (realTimeWordsBtn) {
     realTimeWordsBtn.addEventListener("click", () => {
       // 로그인 검사 없이 바로 페이지 이동
-      window.location.href = "/sideb/index.html";
+      window.location.href = "./sideb/";
     });
   }
 });
