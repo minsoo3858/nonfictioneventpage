@@ -59,23 +59,24 @@ if (menuToggle && dropdownMenu) {
       menuToggle.classList.remove("active");
     }
   });
-}
 
-// 로딩화면 1.5초 유지 후 숨기기 (opacity 0 → 0.5s 후 display:none, .hidden class도 적용)
-const loadingScreen = document.getElementById("loading-screen");
-if (loadingScreen) {
-  loadingScreen.style.opacity = "1";
-  loadingScreen.style.display = "flex";
-  loadingScreen.classList.remove("hidden");
-  setTimeout(() => {
-    loadingScreen.style.transition = "opacity 0.5s";
-    loadingScreen.style.opacity = "0";
-    loadingScreen.classList.add("hidden");
+  // 로딩화면 1.5초 유지 후 숨기기 (opacity 0 → 0.5s 후 display:none, .hidden class도 적용)
+  const loadingScreen = document.getElementById("loading-screen");
+  if (loadingScreen) {
+    loadingScreen.style.opacity = "1";
+    loadingScreen.style.display = "flex";
+    loadingScreen.classList.remove("hidden");
     setTimeout(() => {
-      loadingScreen.style.display = "none";
-    }, 500);
-  }, 1500);
-}
+      loadingScreen.style.transition = "opacity 0.5s";
+      loadingScreen.style.opacity = "0";
+      loadingScreen.classList.add("hidden");
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 500);
+    }, 1500);
+  }
+});
+
 // 향수병 채우기 로직 (GSAP 기반, droplet 쌓임 효과)
 const bottleFillRect = document.getElementById("bottle-fill-rect");
 const bottleDrop = document.getElementById("bottle-drop");
