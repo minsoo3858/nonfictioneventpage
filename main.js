@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Main Content Elements
   // 이하 기능은 로그인 테스트 후 주석 처리
   const startBtn = document.getElementById("start-ai-btn");
+  const realTimeWordsBtn = document.getElementById("real-time-words-btn");
   const aiRecommender = document.getElementById("ai-recommender");
   const options = document.querySelectorAll(".option");
   const resultContainer = document.getElementById("result-container");
@@ -161,108 +162,27 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
       }
+      // 로그인 성공 후 sidea 페이지로 이동
+      window.location.href = "./sidea/index.html";
+    });
+  }
+
+  // --- Real Time Words Button Logic ---
+  if (realTimeWordsBtn) {
+    realTimeWordsBtn.addEventListener("click", async () => {
+      if (!auth.currentUser) {
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (e) {
+          alert("로그인 실패: " + e.message);
+          return;
+        }
+      }
+      // 로그인 성공 후 sidea 페이지로 이동
+      window.location.href = "./sidea/index.html";
     });
   }
 });
-
-// --- AI Recommender Logic ---
-if (startBtn) {
-  startBtn.addEventListener("click", async () => {
-    if (!auth.currentUser) {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (e) {
-        alert("로그인 실패: " + e.message);
-        return;
-      }
-    }
-    const heroSection = document.querySelector(".hero");
-    const originalHeading = heroSection.querySelector("h2");
-    const originalParagraph = heroSection.querySelector("p");
-    originalHeading.style.opacity = "0";
-    originalParagraph.style.opacity = "0";
-    originalHeading.style.transition = "opacity 0.5s ease-out";
-    originalParagraph.style.transition = "opacity 0.5s ease-out";
-    setTimeout(() => {
-      startBtn.style.display = "none";
-      const quizContainer = document.createElement("div");
-      quizContainer.id = "quiz-container";
-      quizContainer.style.opacity = "0";
-      quizContainer.style.transition = "opacity 0.5s ease-out";
-      quizContainer.innerHTML = `
-          <p class="question">당신은 어떤 단어에 끌리시나요?</p>
-          <div class="options">
-            <button class="option" data-value="calm"><img src="/public/고요함.jpg" alt="고요함" class="option-image">고요함</button>
-            <button class="option" data-value="subtle"><img src="/public/섬세함.jpg" alt="섬세함" class="option-image">섬세함</button>
-            <button class="option" data-value="free"><img src="/public/자유로움.jpg" alt="자유로움" class="option-image">자유로움</button>
-          </div>
-        `;
-      startBtn.parentNode.insertBefore(quizContainer, startBtn.nextSibling);
-      setTimeout(() => {
-        quizContainer.style.opacity = "1";
-      }, 50);
-      const newOptions = quizContainer.querySelectorAll(".option");
-      newOptions.forEach((option) => {
-        option.addEventListener("click", () => {
-          quizContainer.innerHTML = `
-              <p class="question">당신은 언제 가장 나다워지나요?</p>
-              <div class="options">
-                <button class="option" data-value="alone"><img src="/public/혼자 조용한 시간 속에서.jpg" alt="혼자 조용한 시간 속에서" class="option-image">혼자 조용한 시간 속에서</button>
-                <button class="option" data-value="with-people"><img src="/public/좋아하는 사람들과 감정을 나눌 때.jpg" alt="좋아하는 사람들과 감정을 나눌 때" class="option-image">좋아하는 사람들과 감정을 나눌 때</button>
-                <button class="option" data-value="new-experience"><img src="/public/낯선 곳에서 새로운 경험을 할 때.jpg" alt="낯선 곳에서 새로운 경험을 할 때" class="option-image">낯선 곳에서 새로운 경험을 할 때</button>
-              </div>
-            `;
-          const secondOptions = quizContainer.querySelectorAll(".option");
-          secondOptions.forEach((secondOption) => {
-            secondOption.addEventListener("click", () => {
-              if (secondOption.dataset.value === "alone") {
-                quizContainer.innerHTML = `
-                    <div class="perfume-result">
-                      <img src="/public/gentlenight.jpg" alt="Gentle Night" class="result-image fade-in" id="perfume-img" style="max-width:320px;display:block;margin:0 auto 2rem auto;">
-                      <h3 class="fade-in" id="perfume-title" style="text-align:center;">Gentle Night</h3>
-                      <p id="perfume-description" style="text-align:center;color:#a0a0a0;min-height:3em;"></p>
-                    </div>
-                  `;
-                setTimeout(() => {
-                  document
-                    .getElementById("perfume-img")
-                    .classList.add("visible");
-                  document
-                    .getElementById("perfume-title")
-                    .classList.add("visible");
-                }, 100);
-                const desc =
-                  "깊은 우디와 머스크, 이끼의 톤과 무화과 향이 고요함을 나타냅니다. 혼자만의 내면에 머무는 시간에 어울리는 향수로, 당신의 본질적인 고요함을 '향수로 기록' 합니다.";
-                const descElem = document.getElementById("perfume-description");
-                let i = 0;
-                function typeWriter() {
-                  if (i <= desc.length) {
-                    descElem.textContent = desc.slice(0, i);
-                    i++;
-                    setTimeout(typeWriter, 32);
-                  }
-                }
-                setTimeout(typeWriter, 700);
-              } else {
-                resultScent.textContent = "";
-                resultDescription.textContent =
-                  "감사합니다! (여기에 결과 또는 다음 로직을 구현하세요)";
-                resultContainer.classList.add("visible");
-                resultContainer.classList.remove("hidden");
-                setTimeout(() => {
-                  resultContainer.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-                }, 200);
-              }
-            });
-          });
-        });
-      });
-    }, 500);
-  });
-}
 
 // 첫번째 퀴즈(기본) 옵션 클릭 시 결과 표시
 const scentData = {
