@@ -101,32 +101,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- AI Recommender Logic ---
   if (startBtn) {
-    startBtn.addEventListener("click", async () => {
-      if (!auth.currentUser) {
-        try {
-          await signInWithPopup(auth, provider);
-        } catch (e) {
-          alert("로그인 실패: " + e.message);
-          return;
-        }
-      }
-      // 로그인 성공 후 sidea 페이지로 이동
+    startBtn.addEventListener("click", () => {
+      // 로그인 검사 없이 바로 페이지 이동
       window.location.href = "./sidea/index.html";
     });
   }
 
   // --- Real Time Words Button Logic ---
   if (realTimeWordsBtn) {
-    realTimeWordsBtn.addEventListener("click", async () => {
-      if (!auth.currentUser) {
-        try {
-          await signInWithPopup(auth, provider);
-        } catch (e) {
-          alert("로그인 실패: " + e.message);
-          return;
-        }
-      }
-      // 로그인 성공 후 sideb 페이지로 이동
+    realTimeWordsBtn.addEventListener("click", () => {
+      // 로그인 검사 없이 바로 페이지 이동
       window.location.href = "./sideb/index.html";
     });
   }
