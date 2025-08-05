@@ -31,34 +31,34 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.head.appendChild(style);
   }
-});
 
-const logoElem = document.querySelector(".logo");
-if (logoElem) {
-  logoElem.style.cursor = "pointer";
-  logoElem.addEventListener("click", () => {
-    window.location.reload();
-  });
-}
+  const logoElem = document.querySelector(".logo");
+  if (logoElem) {
+    logoElem.style.cursor = "pointer";
+    logoElem.addEventListener("click", () => {
+      window.location.reload();
+    });
+  }
 
-// 기존 HTML의 메뉴 토글 기능 활성화
-const menuToggle = document.getElementById("menu-toggle");
-const dropdownMenu = document.getElementById("dropdown-menu");
+  // 기존 HTML의 메뉴 토글 기능 활성화
+  const menuToggle = document.getElementById("menu-toggle");
+  const dropdownMenu = document.getElementById("dropdown-menu");
 
-if (menuToggle && dropdownMenu) {
-  menuToggle.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdownMenu.classList.toggle("show");
-    menuToggle.classList.toggle("active");
-  });
+  if (menuToggle && dropdownMenu) {
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle("show");
+      menuToggle.classList.toggle("active");
+    });
 
-  // 바깥 클릭 시 메뉴 닫기
-  document.addEventListener("click", (e) => {
-    if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-      dropdownMenu.classList.remove("show");
-      menuToggle.classList.remove("active");
-    }
-  });
+    // 바깥 클릭 시 메뉴 닫기
+    document.addEventListener("click", (e) => {
+      if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+        dropdownMenu.classList.remove("show");
+        menuToggle.classList.remove("active");
+      }
+    });
+  }
 
   // 로딩화면 1.5초 유지 후 숨기기 (opacity 0 → 0.5s 후 display:none, .hidden class도 적용)
   const loadingScreen = document.getElementById("loading-screen");
@@ -75,6 +75,9 @@ if (menuToggle && dropdownMenu) {
       }, 500);
     }, 1500);
   }
+
+  // 첫 질문 렌더링
+  renderQuestion(currentQuestion);
 });
 
 // 향수병 채우기 로직 (GSAP 기반, droplet 쌓임 효과)
@@ -744,6 +747,3 @@ function addResultButtons(container) {
 
   container.appendChild(btnWrap);
 }
-
-// 첫 질문 렌더링
-renderQuestion(currentQuestion);
