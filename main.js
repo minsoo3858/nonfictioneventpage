@@ -40,12 +40,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const productItems = document.querySelectorAll(".product-item");
 
   // --- Loading Screen Logic ---
-  setTimeout(() => {
-    glitchEffect.classList.add("active");
+  console.log("Loading screen elements:", loadingScreen, glitchEffect);
+  
+  // 로딩 스크린이 존재하는지 확인
+  if (loadingScreen) {
+    // 1.5초 후 페이드아웃 시작
     setTimeout(() => {
-      loadingScreen.classList.add("hidden");
-    }, 800);
-  }, 1500);
+      console.log("Starting loading screen fade out");
+      
+      // glitch 효과가 있다면 활성화
+      if (glitchEffect) {
+        console.log("Activating glitch effect");
+        glitchEffect.classList.add("active");
+      }
+      
+      // 0.8초 후 실제로 숨기기
+      setTimeout(() => {
+        console.log("Hiding loading screen");
+        loadingScreen.style.transition = "opacity 0.5s ease-out";
+        loadingScreen.style.opacity = "0";
+        loadingScreen.classList.add("hidden");
+        
+        // 완전히 제거
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+          console.log("Loading screen fully hidden");
+        }, 500);
+      }, 800);
+    }, 1500);
+  } else {
+    console.error("Loading screen element not found! ID: loading-screen");
+    // 로딩 스크린이 없으면 바로 메인 컨텐츠 표시
+    document.body.style.overflow = "auto";
+  }
 
   // --- Dynamic Background Effect ---
   // 데스크톱에서는 마우스 이벤트, 모바일에서는 터치 이벤트 사용
