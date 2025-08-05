@@ -1,25 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBdt4sjQe0ep9OCF4hnel11r3rV-jwVX6M",
-  authDomain: "nonf-69ac6.firebaseapp.com",
-  projectId: "nonf-69ac6",
-  storageBucket: "nonf-69ac6.firebasestorage.app",
-  messagingSenderId: "996272483315",
-  appId: "1:996272483315:web:d40a522ad332ebb8c20086",
-  measurementId: "G-P30474PJ1J",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+// Firebase 인증 기능 제거됨
 
 document.addEventListener("DOMContentLoaded", () => {
   // 모바일 디바이스 감지
@@ -42,38 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 로그인 텍스트 영역
-  const loginText = document.getElementById("login-text");
-  let currentUser = null;
-
-  function updateLoginUI(user) {
-    if (user) {
-      loginText.textContent = user.displayName
-        ? `${user.displayName} (Logout)`
-        : "Logout";
-      loginText.onclick = async () => {
-        try {
-          await signOut(auth);
-        } catch (e) {
-          alert("로그아웃 실패: " + e.message);
-        }
-      };
-    } else {
-      loginText.textContent = "Login";
-      loginText.onclick = async () => {
-        try {
-          await signInWithPopup(auth, provider);
-        } catch (e) {
-          alert("로그인 실패: " + e.message);
-        }
-      };
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    updateLoginUI(user);
-  });
+  // 로그인 기능 제거됨
 
   // Loading Screen Elements
   const loadingScreen = document.getElementById("loading-screen");
