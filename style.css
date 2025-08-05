@@ -188,27 +188,29 @@ main {
 .hero::before {
   content: "";
   position: absolute;
-  top: -3%;
-  left: 1.5%;
+  top: -2%;
+  left: 1%;
   width: 100%;
   height: 40%;
   background-image: url("/public/rp.png");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 80%;
+  background-size: 50%;
   z-index: 1;
   opacity: 0;
-  transform: translateY(-100px) scale(0.8);
+  transform: translateY(-150px) scale(0.95);
   transform-origin: top center;
-  animation: tagSwingDrop 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: tagSmoothDescent 3s cubic-bezier(0.33, 0, 0.67, 1) forwards;
+  animation-delay: 0.8s;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.14));
 }
 
 .hero::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 0%;
+  left: 5%;
+  width: 90%;
   height: 40%;
   background-image: url("/public/logo.png");
   background-repeat: no-repeat;
@@ -220,39 +222,26 @@ main {
     logoSpin 20s linear 5.7s infinite;
 }
 
-@keyframes tagSwingDrop {
+@keyframes tagSmoothDescent {
   0% {
     opacity: 0;
-    transform: translateY(-150px) rotate(-15deg) scale(0.8);
-    transform-origin: top center;
+    transform: translateY(-150px) scale(0.95);
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
   }
-  15% {
-    opacity: 0.3;
-    transform: translateY(-80px) rotate(-8deg) scale(0.85);
+  40% {
+    opacity: 0.5;
+    transform: translateY(-90px) scale(0.97);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.14));
   }
-  30% {
-    opacity: 0.6;
-    transform: translateY(-30px) rotate(3deg) scale(0.92);
-  }
-  45% {
+  80% {
     opacity: 0.8;
-    transform: translateY(-5px) rotate(-2deg) scale(0.98);
-  }
-  60% {
-    opacity: 0.9;
-    transform: translateY(8px) rotate(1deg) scale(1.02);
-  }
-  75% {
-    opacity: 0.95;
-    transform: translateY(-3px) rotate(-0.5deg) scale(1.01);
-  }
-  90% {
-    opacity: 0.98;
-    transform: translateY(2px) rotate(0.2deg) scale(1);
+    transform: translateY(-30px) scale(1);
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.16));
   }
   100% {
-    opacity: 0.9;
-    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
   }
 }
 
@@ -594,6 +583,7 @@ footer {
     line-height: 1.2;
     letter-spacing: -1px;
     margin-bottom: 1rem !important;
+    margin-top: 30px !important;
   }
 
   .hero p {

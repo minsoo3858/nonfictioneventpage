@@ -112,7 +112,7 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* 왼쪽부터 요소 배치 */
   padding: 2rem 4rem;
   position: fixed;
   width: calc(100% - 8rem);
@@ -130,7 +130,7 @@ header {
 }
 
 .main-nav {
-  display: none; /* 흰색 메뉴바 숨기기 */
+  display: flex; /* 메뉴바 표시 */
   align-items: center;
   margin-right: 0.5rem;
 }

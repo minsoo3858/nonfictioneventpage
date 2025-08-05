@@ -684,7 +684,32 @@ function addResultButtons(container) {
   // 모바일 터치 최적화
   productBtn.style.webkitTapHighlightColor = "transparent";
   productBtn.style.touchAction = "manipulation";
-  // TODO: 상품 페이지 링크 연결 필요
+
+  // 결과에 따라 다른 상품 페이지로 연결
+  productBtn.addEventListener("click", () => {
+    // 컨테이너 내용을 확인하여 어떤 결과인지 판별
+    const containerHtml = container.innerHTML;
+
+    // Forget Me Not 결과인 경우
+    if (containerHtml.includes("Forget Me Not")) {
+      window.location.href =
+        "https://nonfiction.com/product/detail.html?product_no=19&cate_no=151&display_group=1";
+    }
+    // Santal Cream 결과인 경우
+    else if (containerHtml.includes("Sanatal Cream")) {
+      window.location.href =
+        "https://nonfiction.com/product/detail.html?product_no=14&cate_no=151&display_group=1";
+    }
+    // For Rest 결과인 경우
+    else if (containerHtml.includes("For Rest")) {
+      window.location.href =
+        "https://nonfiction.com/product/detail.html?product_no=158&cate_no=151&display_group=1";
+    } else {
+      // 다른 결과(젠틀나잇 등)인 경우 기존 링크 사용
+      window.location.href =
+        "https://nonfiction.com/product/detail.html?product_no=17&cate_no=42&display_group=1";
+    }
+  });
   btnWrap.appendChild(productBtn);
 
   // 모두의 단어 보기 버튼
@@ -710,7 +735,10 @@ function addResultButtons(container) {
   // 모바일 터치 최적화
   wordsBtn.style.webkitTapHighlightColor = "transparent";
   wordsBtn.style.touchAction = "manipulation";
-  // TODO: 모두의 단어 보기 링크 연결 필요
+  // 모두의 단어 보기 버튼 클릭 시 sideb로 이동
+  wordsBtn.addEventListener("click", () => {
+    window.location.href = "../sideb/index.html";
+  });
   btnWrap.appendChild(wordsBtn);
 
   container.appendChild(btnWrap);

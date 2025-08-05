@@ -1,0 +1,822 @@
+/* 전체 배경 및 폰트 */
+:root {
+  font-family: "Noto Serif KR", "Nanum Myeongjo", serif;
+  color: #222;
+  background: #f8f5ef;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #f8f5ef;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 모바일에서 스크롤 허용 */
+@media screen and (max-width: 767px) {
+  body {
+    overflow: auto;
+    overflow-x: hidden;
+    height: auto;
+  }
+
+  /* 모바일에서 컨텐츠가 잘리지 않도록 */
+  .main-content {
+    margin: 80px 0 40px 0;
+    padding-bottom: 20px;
+  }
+
+  /* 모바일에서 차트와 프로그레스 바가 잘 보이도록 */
+  .chart-container,
+  .progress-container {
+    margin-bottom: 20px;
+  }
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 200px;
+  margin: 80px 0 20px 0;
+  position: relative;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* 상단 로고/텍스트 */
+.nf-header {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 36px 48px 0 48px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+.nf-logo {
+  font-family: "Noto Serif KR", "Nanum Myeongjo", serif;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  color: #222;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.nf-logo:hover {
+  color: #7a6c4d; /* 호버 시 색상 변경 */
+}
+
+.nf-logo:visited {
+  color: #222; /* 방문한 링크도 기본 색상 유지 */
+}
+.nf-question {
+  font-size: 1.25rem;
+  color: #222;
+  font-weight: 500;
+  position: absolute;
+  top: 110px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  width: 100%;
+  z-index: 30;
+  letter-spacing: 0.05em;
+}
+
+/* 중앙 향수병 느낌 박스 */
+.perfume-box {
+  width: 340px;
+  height: 440px;
+  margin: 120px auto 0 auto;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 36% 36% 20% 20%/30% 30% 20% 20%;
+  border: 2.5px solid #d2cfc7;
+  box-shadow: 0 8px 32px 0 rgba(80, 60, 30, 0.08), 0 1.5px 0 #e6e2d8;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: visible;
+}
+.perfume-cap {
+  width: 90px;
+  height: 48px;
+  background: linear-gradient(180deg, #e5e2d8 60%, #bdb7a7 100%);
+  border-radius: 40px 40px 18px 18px/60px 60px 18px 18px;
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 8px 0 #bdb7a733;
+  border: 1.5px solid #d2cfc7;
+}
+
+/* 곡선 텍스트 (SVG로 구현 권장, 임시로 중앙 정렬) */
+.curve-text {
+  width: 100%;
+  text-align: center;
+  font-size: 1.15rem;
+  color: #222;
+  margin-top: 32px;
+  margin-bottom: 0;
+  letter-spacing: 0.02em;
+  font-family: "Noto Serif KR", serif;
+}
+
+/* 향수병 안 단어 */
+.perfume-words {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2em;
+  font-size: 1.5rem;
+  font-family: "Noto Serif KR", serif;
+  font-weight: 600;
+}
+.perfume-words span {
+  display: inline-block;
+  margin: 0.1em 0.2em;
+  font-size: 1.2em;
+  opacity: 0.95;
+}
+.perfume-words .yellow {
+  color: #e6c86b;
+}
+.perfume-words .purple {
+  color: #b6a6e6;
+}
+.perfume-words .pink {
+  color: #e6a6c7;
+}
+.perfume-words .orange {
+  color: #e6b68a;
+}
+.perfume-words .blue {
+  color: #6b8be6;
+}
+.perfume-words .gray {
+  color: #bdb7a7;
+}
+
+/* 버튼 */
+.nf-btn {
+  margin: 32px auto 0 auto;
+  display: block;
+  padding: 0.9em 2.2em;
+  border-radius: 12px;
+  border: 1.5px solid #bdb7a7;
+  background: #f8f5ef;
+  color: #222;
+  font-size: 1.1rem;
+  font-family: "Noto Serif KR", serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.nf-btn:hover {
+  background: #e6e2d8;
+  color: #7a6c4d;
+}
+
+/* 하단 텍스트 */
+.nf-bottom {
+  margin: 36px auto 0 auto;
+  text-align: center;
+  color: #222;
+  font-size: 1.08rem;
+  font-family: "Noto Serif KR", serif;
+}
+.nf-bottom strong {
+  font-weight: bold;
+  color: #b6a6e6;
+}
+
+/* NONFICTION 하단 로고 */
+.nf-footer {
+  margin: 32px auto 0 auto;
+  text-align: center;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 0.08em;
+}
+
+/* 입자 효과 (간단한 CSS 애니메이션) */
+.nf-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+.nf-particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.18;
+  animation: float 6s infinite linear;
+}
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.32;
+  }
+  100% {
+    transform: translateY(-60px) scale(1.2);
+    opacity: 0.18;
+  }
+}
+
+/* Chart Container */
+.chart-container {
+  position: relative;
+  width: 80%;
+  max-width: 400px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin: 20px auto;
+  z-index: 100;
+}
+
+/* User's Choice Word Highlight */
+.user-choice {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Brand Icons */
+.brand-icon {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  opacity: 0.3;
+  transition: all 0.3s ease-in-out;
+  z-index: 10;
+}
+
+.brand-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-icon svg path {
+  stroke: #7a6c4d;
+  stroke-width: 4;
+}
+
+.brand-icon:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.brand-icon--snake {
+  transform: rotate(-15deg);
+}
+.brand-icon--leaf {
+  transform: rotate(20deg);
+}
+.brand-icon--book {
+  transform: rotate(-5deg);
+}
+
+/* Progress Section */
+.progress-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Progress Bar */
+.progress-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  z-index: 101; /* Ensure it's above the chart */
+  margin-bottom: 20px;
+}
+
+.progress-text {
+  font-size: 1.1rem;
+  color: #7a6c4d;
+  margin-bottom: 12px;
+  font-family: "Noto Serif KR", serif;
+}
+
+.progress-text strong {
+  font-weight: bold;
+  color: #b6a6e6;
+}
+
+.progress-bar-outer {
+  width: 100%;
+  height: 8px;
+  background-color: #e6e2d8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background-color: #b6a6e6;
+  border-radius: 4px;
+  transition: width 2s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 0; /* Initial width for animation */
+}
+
+/* Test Button */
+.test-button {
+  padding: 15px 30px;
+  background-color: #7a6c4d; /* 논픽션 브랜드 컬러 */
+  color: #f7f5f2;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.test-button:hover {
+  background-color: #5e533e;
+  transform: translateY(-2px);
+}
+
+.test-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ======================================
+   반응형 디자인 미디어 쿼리
+====================================== */
+
+/* 컨테이너 클래스 추가 - 반응형 콘텐츠를 위한 공통 클래스 */
+.container {
+  width: 100%;
+  max-width: 1200px; /* 최대 너비 설정 */
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* 데스크톱 레이아웃 (769px 이상) */
+@media screen and (min-width: 769px) {
+  .main-content {
+    margin-top: 80px; /* 더 아래로 이동 */
+    width: 45%; /* 왼쪽에 병 영역 - 약간 줄여서 왼쪽으로 이동 효과 */
+    align-items: flex-start; /* 왼쪽 정렬로 변경 */
+    float: left;
+    min-height: 600px; /* 높이 충분히 확보 */
+    padding-left: 20px; /* 왼쪽에 약간 패딩 추가 */
+  }
+
+  .progress-section {
+    float: right;
+    width: 48%;
+    margin-top: 200px; /* 상단 여백 늘려서 병과 수직 정렬 맞춤 */
+  }
+
+  .chart-container {
+    float: right;
+    width: 48%;
+    max-width: 550px;
+    margin-top: 40px; /* 여백 늘림 */
+  }
+
+  .button-container {
+    float: right;
+    width: 50%;
+    justify-content: flex-start;
+    padding-left: 20px;
+  }
+
+  .container {
+    overflow: hidden; /* 플로트 요소 포함 */
+  }
+
+  .nf-question {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 1.4rem;
+  }
+
+  /* 차트와 프로그레스 바 위치 미세 조정 */
+  .chart-container {
+    background-color: #fff;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    height: 340px;
+  }
+
+  .progress-container {
+    max-width: 550px;
+    text-align: left;
+    padding-left: 20px;
+  }
+
+  .progress-text {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+
+  .test-button {
+    margin-left: 20px;
+  }
+}
+
+/* 태블릿 크기 (768px 이하) */
+@media screen and (max-width: 768px) {
+  .nf-header {
+    padding: 20px 32px 0 32px; /* 상단 패딩 줄임 */
+  }
+
+  .nf-logo {
+    font-size: 1.8rem;
+  }
+
+  .nf-question {
+    top: 70px; /* 테두리 위에 배치 */
+    font-size: 1.1rem; /* 크기 조금 줄임 */
+  }
+
+  .perfume-box {
+    width: 280px;
+    height: 380px;
+    margin: 130px auto 0 auto; /* 상단 마진 늘려서 문구와 간격 확보 */
+  }
+
+  .perfume-words {
+    font-size: 1.3rem;
+  }
+
+  .chart-container {
+    max-width: 90%;
+  }
+}
+
+/* 모바일 크기 (480px 이하) */
+@media screen and (max-width: 480px) {
+  .nf-header {
+    padding: -20px 24px 0 24px !important; /* 상단 패딩 더 줄임 */
+  }
+
+  .nf-logo {
+    font-size: 1.5rem;
+  }
+
+  .nf-question {
+    font-size: 0.9rem;
+    top: -60px !important; /* 훨씬 더 위로 올림 */
+  }
+
+  .perfume-box {
+    width: 240px;
+    height: 320px;
+    margin: 100px auto 0 auto; /* 상단 마진 줄여서 문구와 더 가깝게 */
+  }
+
+  .perfume-cap {
+    width: 70px;
+    height: 40px;
+    top: -30px;
+  }
+
+  .curve-text {
+    font-size: 0.9rem;
+    margin-top: 24px;
+  }
+
+  .perfume-words {
+    font-size: 1.1rem;
+  }
+
+  .perfume-words span {
+    font-size: 1.1em;
+  }
+
+  .chart-container {
+    width: 90%;
+    height: 250px;
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  .progress-container {
+    width: 90%;
+    margin: 15px auto;
+  }
+
+  .progress-text {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar-outer {
+    height: 6px;
+  }
+
+  .test-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  .main-content {
+    margin: 20px 0 10px 0; /* 상단 마진 더 줄여서 전체적으로 위로 올림 */
+  }
+
+  #falling-text-demo {
+    max-height: 300px;
+    margin-top: 10px; /* 데모 영역도 더 위로 올림 */
+  }
+
+  /* 단어들을 더 잘 보이게 처리 */
+  .falling-text-container span {
+    opacity: 0.9 !important;
+    font-weight: 600;
+    color: #222 !important;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  /* 하이라이트된 단어는 더 강조 */
+  .falling-text-container span.highlighted {
+    opacity: 1 !important;
+    color: #b6a6e6 !important;
+    font-weight: 700;
+  }
+
+  /* 향수병 영역을 확실하게 보이도록 */
+  .basket-area {
+    border-width: 3px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Falling Text 컨테이너 스타일 */
+.falling-text-container {
+  pointer-events: none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* 데스크톱에서 Falling Text 컨테이너 추가 스타일 */
+@media screen and (min-width: 769px) {
+  .falling-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.falling-text-target {
+  font-size: 2rem;
+  line-height: 1.4;
+  pointer-events: auto;
+  display: none; /* 클릭할 단어들은 숨김 처리 */
+}
+
+.falling-text-canvas {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 향수병 스타일 */
+.basket-area {
+  position: absolute;
+  border: 5px solid #e5e2d8;
+  border-radius: 36% 36% 20% 20%/30% 30% 20% 20%;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px 0 rgba(80, 60, 30, 0.08), 0 1.5px 0 #e6e2d8;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden; /* 내부 요소가 바깥으로 벗어나지 않게 함 */
+}
+
+/* 데스크톱에서 향수병 추가 스타일 */
+@media screen and (min-width: 769px) {
+  .basket-area {
+    border-width: 6px;
+    box-shadow: 0 12px 40px rgba(80, 60, 30, 0.12), 0 2px 0 #e6e2d8;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  /* 단어들도 데스크톱에서 더 크고 선명하게 */
+  .falling-text-container span {
+    font-size: 1.7rem !important;
+    opacity: 0.95 !important;
+    font-weight: 600 !important;
+  }
+
+  /* 하이라이트된 단어는 더 강조 */
+  .falling-text-container span.highlighted {
+    font-weight: 700 !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 각 단어별 색깔 설정 */
+.falling-text-container span[data-word="고요함"] {
+  color: #8b5fbf !important; /* 보라색 */
+  font-size: 2.2rem !important; /* 큰 크기 */
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(139, 95, 191, 0.3);
+}
+
+.falling-text-container span[data-word="자유로움"] {
+  color: #4a90e2 !important; /* 파란색 */
+  font-size: 2.2rem !important; /* 큰 크기 */
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+}
+
+.falling-text-container span[data-word="섬세함"] {
+  color: #e67e85 !important; /* 분홍색 */
+  font-size: 2.2rem !important; /* 큰 크기 */
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(230, 126, 133, 0.3);
+}
+
+.falling-text-container span[data-word="온기"] {
+  color: #f5a623 !important; /* 오렌지색 */
+  font-size: 2.2rem !important; /* 큰 크기 */
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(245, 166, 35, 0.3);
+}
+
+.falling-text-container span[data-word="새로운"] {
+  color: #7ed321 !important; /* 연두색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(126, 211, 33, 0.3);
+}
+
+.falling-text-container span[data-word="경험"] {
+  color: #bd10e0 !important; /* 자주색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(189, 16, 224, 0.3);
+}
+
+.falling-text-container span[data-word="감정"] {
+  color: #ff6b9d !important; /* 핑크색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(255, 107, 157, 0.3);
+}
+
+.falling-text-container span[data-word="조용한"] {
+  color: #50a3a2 !important; /* 청록색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(80, 163, 162, 0.3);
+}
+
+.falling-text-container span[data-word="시간"] {
+  color: #9013fe !important; /* 보라색 계열 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(144, 19, 254, 0.3);
+}
+
+.falling-text-container span[data-word="대화"] {
+  color: #ff9500 !important; /* 주황색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(255, 149, 0, 0.3);
+}
+
+.falling-text-container span[data-word="솔직함"] {
+  color: #417505 !important; /* 녹색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(65, 117, 5, 0.3);
+}
+
+.falling-text-container span[data-word="햇살"] {
+  color: #ffd60a !important; /* 노란색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(255, 214, 10, 0.3);
+}
+
+.falling-text-container span[data-word="진심"] {
+  color: #d90429 !important; /* 빨간색 */
+  font-size: 1.6rem !important;
+  text-shadow: 0 1px 3px rgba(217, 4, 41, 0.3);
+}
+
+/* 영어 단어들 색깔 */
+.falling-text-container span[data-word="Gentle"] {
+  color: #6b73ff !important; /* 인디고 */
+  font-size: 1.5rem !important;
+  text-shadow: 0 1px 3px rgba(107, 115, 255, 0.3);
+}
+
+.falling-text-container span[data-word="Night"] {
+  color: #2d3561 !important; /* 네이비 */
+  font-size: 1.5rem !important;
+  text-shadow: 0 1px 3px rgba(45, 53, 97, 0.3);
+}
+
+.falling-text-container span[data-word="For"] {
+  color: #8e44ad !important; /* 보라색 계열 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(142, 68, 173, 0.3);
+}
+
+.falling-text-container span[data-word="rest"] {
+  color: #27ae60 !important; /* 에메랄드 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(39, 174, 96, 0.3);
+}
+
+.falling-text-container span[data-word="Forget"] {
+  color: #e74c3c !important; /* 빨간색 계열 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
+}
+
+.falling-text-container span[data-word="Me"] {
+  color: #f39c12 !important; /* 오렌지 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(243, 156, 18, 0.3);
+}
+
+.falling-text-container span[data-word="Not"] {
+  color: #34495e !important; /* 회색 계열 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(52, 73, 94, 0.3);
+}
+
+.falling-text-container span[data-word="Santal"] {
+  color: #d35400 !important; /* 갈색 계열 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(211, 84, 0, 0.3);
+}
+
+.falling-text-container span[data-word="Cream"] {
+  color: #f8c471 !important; /* 크림색 */
+  font-size: 1.4rem !important;
+  text-shadow: 0 1px 3px rgba(248, 196, 113, 0.3);
+}
+
+/* 모바일에서는 크기 조정 */
+@media screen and (max-width: 768px) {
+  .falling-text-container span[data-word="고요함"],
+  .falling-text-container span[data-word="자유로움"],
+  .falling-text-container span[data-word="섬세함"],
+  .falling-text-container span[data-word="온기"] {
+    font-size: 1.8rem !important;
+  }
+
+  .falling-text-container span {
+    font-size: 1.3rem !important;
+  }
+}

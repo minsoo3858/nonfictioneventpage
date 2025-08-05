@@ -178,8 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
       }
-      // 로그인 성공 후 sidea 페이지로 이동
-      window.location.href = "./sidea/index.html";
+      // 로그인 성공 후 sideb 페이지로 이동
+      window.location.href = "./sideb/index.html";
     });
   }
 });

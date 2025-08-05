@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NONFICTION - Black</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header class="nf-header">
+        <a href="/" class="nf-logo">NONFICTION</a>
+        <div class="nf-question">수많은 기억으로부터 만들어지고 있습니다.</div>
+      </header>
+
+      <div id="app" class="main-content"></div>
+
+      <div class="progress-section">
+        <div id="progress-container" class="progress-container">
+          <!-- Progress bar will be inserted here by JS -->
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="word-chart"></canvas>
+      </div>
+
+      <div class="button-container">
+        <!-- Test button will be inserted here by JS -->
+      </div>
+    </div>
+    <script type="module" src="/sideb/main.constrained.js"></script>
+  </body>
+</html>
