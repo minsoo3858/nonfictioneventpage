@@ -297,6 +297,9 @@ async function signInWithProvider(provider, eventType) {
   try {
     // 현재 페이지로 리다이렉트 (Netlify/Supabase Auth 설정과 일치해야 함)
     const redirectTo = window.location.origin + window.location.pathname;
+    console.log("[DEBUG] 현재 origin:", window.location.origin);
+    console.log("[DEBUG] 현재 pathname:", window.location.pathname);
+    console.log("[DEBUG] 최종 redirectTo:", redirectTo);
     console.log("[OAuth] signInWithProvider 호출", { provider, redirectTo });
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
