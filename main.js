@@ -1,6 +1,41 @@
 // Firebase 인증 기능 제거됨
+import { supabase } from "./supabaseClient.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 로그인/로그아웃 버튼 동적 생성 함수
+  function renderAuthButtons(session) {
+    let header = document.querySelector("header");
+    if (!header) return;
+    let authBtn = document.getElementById("auth-btn");
+    if (authBtn) authBtn.remove();
+    authBtn = document.createElement("button");
+    authBtn.id = "auth-btn";
+    authBtn.style.marginLeft = "16px";
+    authBtn.style.padding = "0.5em 1.2em";
+    authBtn.style.borderRadius = "1.2em";
+    authBtn.style.border = "none";
+    authBtn.style.fontWeight = "bold";
+    authBtn.style.cursor = "pointer";
+    authBtn.style.background = "#e4c662";
+    authBtn.style.color = "#222";
+    if (session && session.user) {
+      authBtn.textContent = "로그아웃";
+      authBtn.onclick = async () => {
+        await supabase.auth.signOut();
+        window.location.reload();
+      };
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.onclick = async () => {
+        // 자동 로그인 방지: 기존 세션 강제 로그아웃 후 로그인 시도
+        await supabase.auth.signOut();
+        localStorage.setItem("afterLoginRedirect", "sidea");
+        await signInWithProvider("kakao", "manual_login_btn");
+      };
+    }
+    // 헤더 오른쪽에 버튼 추가
+    header.appendChild(authBtn);
+  }
   // 모바일 디바이스 감지
   const isMobile =
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -111,18 +146,105 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- AI Recommender Logic ---
+
+  // --- AI Recommender Logic ---
   if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      // 로그인 검사 없이 바로 페이지 이동
-      window.location.href = "./sidea/";
+    startBtn.style.display = "inline-block";
+    startBtn.disabled = false;
+    startBtn.addEventListener("click", async () => {
+      // 자동 로그인 방지: 기존 세션 강제 로그아웃 후 로그인 시도
+      await supabase.auth.signOut();
+      localStorage.setItem("afterLoginRedirect", "sidea");
+      await signInWithProvider("kakao", "start_button_click");
     });
+  } else {
+    console.warn(
+      "start-ai-btn 버튼이 없습니다. HTML에 id='start-ai-btn' 버튼이 있는지 확인하세요."
+    );
   }
 
   // --- Real Time Words Button Logic ---
   if (realTimeWordsBtn) {
-    realTimeWordsBtn.addEventListener("click", () => {
-      // 로그인 검사 없이 바로 페이지 이동
-      window.location.href = "./sideb/";
+    realTimeWordsBtn.style.display = "inline-block";
+    realTimeWordsBtn.disabled = false;
+    realTimeWordsBtn.addEventListener("click", async () => {
+      // 자동 로그인 방지: 기존 세션 강제 로그아웃 후 로그인 시도
+      await supabase.auth.signOut();
+      localStorage.setItem("afterLoginRedirect", "sideb");
+      await signInWithProvider("kakao", "realtime_words_click");
+    });
+  } else {
+    console.warn(
+      "real-time-words-btn 버튼이 없습니다. HTML에 id='real-time-words-btn' 버튼이 있는지 확인하세요."
+    );
+  }
+
+  // 인증 상태 변화 감지하여 로그인 후 자동 이동 및 버튼 표시
+  supabase.auth.onAuthStateChange((event, session) => {
+    renderAuthButtons(session);
+    if (event === "SIGNED_IN" && session && session.user) {
+      // 카카오톡 로그인 성공 시 Supabase에 기록
+      logEvent("kakao_login_success", session.user.id);
+      const redirect = localStorage.getItem("afterLoginRedirect");
+      if (redirect === "sidea") {
+        localStorage.removeItem("afterLoginRedirect");
+        window.location.href = "/sidea/index.html";
+      } else if (redirect === "sideb") {
+        localStorage.removeItem("afterLoginRedirect");
+        window.location.href = "/sideb/index.html";
+      }
+    }
+  });
+
+  // 페이지 로드시 현재 세션으로 버튼 표시
+  supabase.auth.getSession().then(({ data }) => {
+    renderAuthButtons(data?.session);
+  });
+
+  // 제품 hover 효과 (요소가 존재할 때만)
+  if (productItems && productItems.length > 0) {
+    productItems.forEach((item) => {
+      const productNameElement = item.querySelector("p");
+      if (productNameElement) {
+        const productName = productNameElement.textContent;
+        const infoDiv = document.createElement("div");
+        infoDiv.classList.add("product-info");
+        infoDiv.innerHTML = `<p>${productName}</p>`;
+        item.appendChild(infoDiv);
+        productNameElement.style.display = "none";
+      }
+    });
+  }
+
+  // --- 퀴즈 옵션 이벤트 처리 ---
+  // (요소가 존재할 때만)
+  if (options && options.length > 0) {
+    options.forEach((option) => {
+      function handleOptionSelect() {
+        const selectedValue = option.dataset.value;
+        const result = scentData[selectedValue];
+        if (result) {
+          resultScent.textContent = result.name;
+          resultDescription.textContent = result.description;
+          resultContainer.classList.add("visible");
+          resultContainer.classList.remove("hidden");
+          setTimeout(() => {
+            resultContainer.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }, 200);
+        }
+      }
+
+      // 클릭 이벤트
+      option.addEventListener("click", handleOptionSelect);
+
+      // 터치 이벤트 (모바일 최적화)
+      option.addEventListener("touchend", (e) => {
+        e.preventDefault(); // 더블 탭 줌 방지
+        handleOptionSelect();
+      });
     });
   }
 });
@@ -151,48 +273,48 @@ const scentData = {
   },
 };
 
-// 퀴즈 옵션 이벤트 처리 (요소가 존재할 때만)
-if (options && options.length > 0) {
-  options.forEach((option) => {
-    function handleOptionSelect() {
-      const selectedValue = option.dataset.value;
-      const result = scentData[selectedValue];
-      if (result) {
-        resultScent.textContent = result.name;
-        resultDescription.textContent = result.description;
-        resultContainer.classList.add("visible");
-        resultContainer.classList.remove("hidden");
-        setTimeout(() => {
-          resultContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }, 200);
-      }
-    }
-
-    // 클릭 이벤트
-    option.addEventListener("click", handleOptionSelect);
-
-    // 터치 이벤트 (모바일 최적화)
-    option.addEventListener("touchend", (e) => {
-      e.preventDefault(); // 더블 탭 줌 방지
-      handleOptionSelect();
-    });
-  });
+// 이벤트 로그 함수
+async function logEvent(eventType, userId, extra = {}) {
+  console.log("[logEvent] called with", { eventType, userId, extra });
+  const { data, error } = await supabase.from("non_events").insert([
+    {
+      event_type: eventType,
+      user_id: userId,
+      event_value: {}, // event_value는 NOT NULL이므로 항상 기본값 입력
+      ...extra,
+      // created_at은 Supabase에서 자동 생성
+    },
+  ]);
+  if (error) {
+    console.error("[logEvent] Supabase insert error:", error);
+  } else {
+    console.log("[logEvent] Supabase insert success:", data);
+  }
 }
 
-// 제품 hover 효과 (요소가 존재할 때만)
-if (productItems && productItems.length > 0) {
-  productItems.forEach((item) => {
-    const productNameElement = item.querySelector("p");
-    if (productNameElement) {
-      const productName = productNameElement.textContent;
-      const infoDiv = document.createElement("div");
-      infoDiv.classList.add("product-info");
-      infoDiv.innerHTML = `<p>${productName}</p>`;
-      item.appendChild(infoDiv);
-      productNameElement.style.display = "none";
+// 소셜 로그인 트리거 함수
+async function signInWithProvider(provider, eventType) {
+  try {
+    // 현재 페이지로 리다이렉트 (Netlify/Supabase Auth 설정과 일치해야 함)
+    const redirectTo = window.location.origin + window.location.pathname;
+    console.log("[OAuth] signInWithProvider 호출", { provider, redirectTo });
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo },
+    });
+    if (error) {
+      alert("로그인 실패: " + error.message);
+      console.error("카카오 로그인 에러:", error);
+      return;
     }
-  });
+    // 로그인 성공 후 유저 정보 받아서 이벤트 로그 기록
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (data && data.user) {
+        logEvent(eventType, data.user.id);
+      }
+    });
+  } catch (e) {
+    alert("카카오 로그인 중 예외 발생: " + e.message);
+    console.error("카카오 로그인 예외:", e);
+  }
 }

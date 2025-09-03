@@ -1,5 +1,35 @@
 // 사용자가 선택한 답 저장
+import { supabase } from "../supabaseClient.js";
 let userAnswers = [];
+
+// 선택지 기록 함수
+async function recordChoice(questionIdx, choiceValue) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return; // 로그인 안 된 경우 기록하지 않음
+  await supabase.from("choices_data").insert([
+    {
+      user_id: user.id,
+      choice: choiceValue,
+      step: `question_${questionIdx + 1}`,
+    },
+  ]);
+}
+
+// 상품페이지 버튼 클릭 기록 함수
+async function recordProductClick(productName, resultInfo = null) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("product_clicks").insert([
+    {
+      user_id: user.id,
+      product_name: productName,
+    },
+  ]);
+}
 
 // 모바일 디바이스 감지 및 최적화
 document.addEventListener("DOMContentLoaded", () => {
@@ -231,6 +261,8 @@ function renderQuestion(idx) {
       isAnimating = true;
       // 답 저장
       userAnswers[currentQuestion] = opt.text;
+      // ★ 선택지 기록 추가
+      await recordChoice(currentQuestion, opt.text);
       // fillStep이 currentQuestion보다 크면(=이전 질문에서 여러번 클릭 등 꼬임) 강제 동기화
       if (fillStep !== currentQuestion) {
         fillStep = currentQuestion;
@@ -291,12 +323,7 @@ function renderQuestion(idx) {
 }
 
 function nextStep() {
-  // 3. For Rest: 자유로움 → 낯선 곳 경험 → 솔직했던 밤 → 지금 이 순간의 온기
-  const isForRest =
-    userAnswers[0] === "자유로움" &&
-    userAnswers[1] === "낯선 곳에서 새로운 경험을 할 때" &&
-    userAnswers[2] === "그날, 내게 솔직해졌던 밤" &&
-    userAnswers[3] === "지금 이 순간을 닮은 온기";
+  // 성향 점수 기반 향수 매핑 로직
   const quizContainer = document.getElementById("quiz-container");
   const bottleSvg = document.getElementById("perfume-svg");
   const bottleDropDiv = document.getElementById("bottle-drop");
@@ -304,20 +331,53 @@ function nextStep() {
     currentQuestion++;
     renderQuestion(currentQuestion);
   } else {
-    // 결과 케이스:
-    // 1. Santal Cream: 고요함 → 혼자 있는 조용한 시간 속에서 → 오후의 햇살을 따라 걷던 길 → 말없이 나를 이해해주는 속도
-    const isSanatalCream =
-      userAnswers[0] === "고요함" &&
-      userAnswers[1] === "혼자 있는 조용한 시간 속에서" &&
-      userAnswers[2] === "오후의 햇살을 따라 걷던 길" &&
-      userAnswers[3] === "말없이 나를 이해해주는 속도";
-
-    // 2. Forget Me Not: 섬세함 → 감정을 나눌 때 → 감정 깊은 대화 → 진심 담은 마음
-    const isForgetMeNot =
-      userAnswers[0] === "섬세함" &&
-      userAnswers[1] === "좋아하는 사람들과 감정을 나눌 때" &&
-      userAnswers[2] === "한 문장이 마음을 적신 대화" &&
-      userAnswers[3] === "조심스럽지만 진심을 담은 마음";
+    // 각 향수별 점수표 (질문 순서대로)
+    // [Santal Cream, Forget Me Not, For Rest, Gentle Night]
+    const scoreTable = [
+      // Q1
+      {
+        고요함: [2, 0, 0, 1],
+        섬세함: [0, 2, 0, 1],
+        자유로움: [0, 0, 2, 1],
+      },
+      // Q2
+      {
+        "혼자 있는 조용한 시간 속에서": [2, 0, 0, 1],
+        "좋아하는 사람들과 감정을 나눌 때": [0, 2, 0, 1],
+        "낯선 곳에서 새로운 경험을 할 때": [0, 0, 2, 1],
+      },
+      // Q3
+      {
+        "오후의 햇살을 따라 걷던 길": [2, 0, 0, 1],
+        "한 문장이 마음을 적신 대화": [0, 2, 0, 1],
+        "그날, 내게 솔직해졌던 밤": [0, 0, 2, 1],
+      },
+      // Q4
+      {
+        "말없이 나를 이해해주는 속도": [2, 0, 0, 1],
+        "조심스럽지만 진심을 담은 마음": [0, 2, 0, 1],
+        "지금 이 순간을 닮은 온기": [0, 0, 2, 1],
+      },
+    ];
+    // 점수 합산
+    let scores = [0, 0, 0, 0];
+    for (let i = 0; i < 4; i++) {
+      const ans = userAnswers[i];
+      const arr = scoreTable[i][ans];
+      if (arr) {
+        for (let j = 0; j < 4; j++) scores[j] += arr[j];
+      }
+    }
+    // 가장 점수가 높은 향수 선택, 동점이면 Gentle Night 우선
+    let maxScore = Math.max(...scores);
+    let idx = scores.lastIndexOf(maxScore);
+    const perfumeTypes = [
+      "Santal Cream",
+      "Forget Me Not",
+      "For Rest",
+      "Gentle Night",
+    ];
+    let perfumeType = perfumeTypes[idx];
 
     // 공병(향수병) 자연스럽게 숨기기 (페이드아웃)
     if (bottleSvg) {
@@ -379,7 +439,8 @@ function nextStep() {
         style.innerHTML = `.bottle-drop[style*="display: none"] { opacity: 0 !important; pointer-events: none !important; }`;
         document.head.appendChild(style);
       }
-      if (isSanatalCream) {
+      // 결과별로 기존 분기 코드 재사용
+      if (perfumeType === "Santal Cream") {
         // Santal Cream 결과
         const resultBox = document.createElement("div");
         resultBox.style.margin = "3.5rem auto 0 auto";
@@ -448,7 +509,7 @@ function nextStep() {
           }
         }
         typeWriter();
-      } else if (isForgetMeNot) {
+      } else if (perfumeType === "Forget Me Not") {
         // Forget Me Not 결과
         const resultBox = document.createElement("div");
         resultBox.style.margin = "3.5rem auto 0 auto";
@@ -516,7 +577,7 @@ function nextStep() {
           }
         }
         typeWriter();
-      } else if (isForRest) {
+      } else if (perfumeType === "For Rest") {
         // For Rest 결과
         const resultBox = document.createElement("div");
         resultBox.style.margin = "3.5rem auto 0 auto";
@@ -689,30 +750,32 @@ function addResultButtons(container) {
   productBtn.style.webkitTapHighlightColor = "transparent";
   productBtn.style.touchAction = "manipulation";
 
-  // 결과에 따라 다른 상품 페이지로 연결
-  productBtn.addEventListener("click", () => {
+  // 결과에 따라 다른 상품 페이지로 연결 및 클릭 기록
+  productBtn.addEventListener("click", async () => {
     // 컨테이너 내용을 확인하여 어떤 결과인지 판별
     const containerHtml = container.innerHTML;
-
-    // Forget Me Not 결과인 경우
+    let productName = "Unknown";
+    let productUrl =
+      "https://nonfiction.com/product/detail.html?product_no=17&cate_no=42&display_group=1";
     if (containerHtml.includes("Forget Me Not")) {
-      window.location.href =
+      productName = "Forget Me Not";
+      productUrl =
         "https://nonfiction.com/product/detail.html?product_no=19&cate_no=151&display_group=1";
-    }
-    // Santal Cream 결과인 경우
-    else if (containerHtml.includes("Sanatal Cream")) {
-      window.location.href =
+    } else if (containerHtml.includes("Sanatal Cream")) {
+      productName = "Sanatal Cream";
+      productUrl =
         "https://nonfiction.com/product/detail.html?product_no=14&cate_no=151&display_group=1";
-    }
-    // For Rest 결과인 경우
-    else if (containerHtml.includes("For Rest")) {
-      window.location.href =
+    } else if (containerHtml.includes("For Rest")) {
+      productName = "For Rest";
+      productUrl =
         "https://nonfiction.com/product/detail.html?product_no=158&cate_no=151&display_group=1";
-    } else {
-      // 다른 결과(젠틀나잇 등)인 경우 기존 링크 사용
-      window.location.href =
-        "https://nonfiction.com/product/detail.html?product_no=17&cate_no=42&display_group=1";
+    } else if (containerHtml.includes("Gentle Night")) {
+      productName = "Gentle Night";
+      // 기존 링크 유지
     }
+    // 기록: 추천된 향수명, 전체 선택지(userAnswers)도 함께 저장
+    await recordProductClick(productName, { answers: userAnswers });
+    window.location.href = productUrl;
   });
   btnWrap.appendChild(productBtn);
 
